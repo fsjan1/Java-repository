@@ -1,0 +1,32 @@
+package question;
+
+import java.io.*;
+import java.net.InetAddress;
+import java.net.Socket;
+
+public class Client {
+	public static void main(String[] args) throws Exception {
+		// 1 新建与服务器的连接
+		
+		Socket socket = new Socket("192.168.2.100", 9001);
+
+		// 2 获得网络输出流
+		OutputStream os = socket.getOutputStream();
+
+		// 3 通过文件输入流将文件内容写入网络输出流
+		byte[] buf1 = "Hello World".getBytes("utf-8");
+		os.write(buf1);
+		InputStream echoIs = socket.getInputStream();
+		byte[] buf2 = new byte[1024];
+		int length = echoIs.read(buf2);
+
+		// 5-使用字节数组作为方法参数，构造字符串
+		String echoMessage = new String(buf2, 0, length, "utf-8");
+		System.out.println("echo:" + echoMessage);
+		System.out.println(socket.getInetAddress());
+		System.out.println(InetAddress.getLocalHost());
+		// 6 关闭连接
+		socket.close();
+	}
+
+}
