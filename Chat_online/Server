@@ -2,22 +2,23 @@ package question;
 
 import java.io.*;
 import java.net.*;
+import java.util.Scanner;
 
 //处理用户请求类(支持并发)，继承Thread类处理用户请求
 public class Server extends Thread {
-	public static void main(String[] args) throws Exception{
-		@SuppressWarnings("resource")
-		ServerSocket listenSocket = new ServerSocket(9001);  //1-新建侦听socket
-		//2-循环接受、处理用户请求
-		    while(true){                                
-		//2.1 阻塞直到接到客户连接(用户请求)
-		Socket socket=listenSocket.accept();  
-		//2.2 新建处理请求线程对象
-		Server deal=new Server(socket);
-		//2.3 处理请求对象线程进入就绪状态
-		deal.start();
-		    }
+	public static void main(String[] args) throws Exception {
+
+		ServerSocket listenSocket = new ServerSocket(9001); // 1-新建侦听socket
+		// 2-循环接受、处理用户请求
+		while (true) {
+			// 2.1 阻塞直到接到客户连接(用户请求)
+			Socket socket = listenSocket.accept();
+			// 2.2 新建处理请求线程对象
+			Server deal = new Server(socket);
+			// 2.3 处理请求对象线程进入就绪状态
+			deal.start();
 		}
+	}
 
 //组合连接socket对象(连接客户端)
 	private Socket socket;
@@ -29,14 +30,21 @@ public class Server extends Thread {
 
 	public void run() {
 		try {
+			while(true) {
 			InputStream is = socket.getInputStream(); // 1获得输入流
-			byte[] buf = new byte[1024];
-			int length = is.read(buf); // 读入字节数组
-			String request = new String(buf, 0, length, "utf-8");
-			System.out.println("client request:" + request);
-			OutputStream os = socket.getOutputStream(); // 2-获得输出流
-			os.write(buf, 0, length); // 通过输出流写回
-			socket.close(); // 4-关闭socket
+			byte[] buf1 = new byte[1024];
+			int length = is.read(buf1); // 读入字节数组
+			String request = new String(buf1, 0, length, "utf-8");
+			System.out.println("client:" + request);
+			
+			OutputStream os = socket.getOutputStream(); // 2-获得输出流	
+			Scanner sc=new Scanner(System.in);
+			String out=sc.nextLine();
+			byte[] buf2=out.getBytes("utf-8");
+			os.write(buf2);
+					
+
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
