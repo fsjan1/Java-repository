@@ -1,52 +1,45 @@
 package question;
 
-import java.io.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.*;
-import java.util.Scanner;
 
-//处理用户请求类(支持并发)，继承Thread类处理用户请求
-public class Server extends Thread {
+import javax.swing.JButton;
+
+
+public class Server {
+	
 	public static void main(String[] args) throws Exception {
-
-		ServerSocket listenSocket = new ServerSocket(9001); // 1-新建侦听socket
-		// 2-循环接受、处理用户请求
-		while (true) {
-			// 2.1 阻塞直到接到客户连接(用户请求)
-			Socket socket = listenSocket.accept();
-			// 2.2 新建处理请求线程对象
-			Server deal = new Server(socket);
-			// 2.3 处理请求对象线程进入就绪状态
-			deal.start();
-		}
-	}
-
-//组合连接socket对象(连接客户端)
-	private Socket socket;
-
-//构造方法，传入连接客户端socket
-	public Server(Socket socket) {
-		this.socket = socket;
-	}
-
-	public void run() {
-		try {
-			while(true) {
-			InputStream is = socket.getInputStream(); // 1获得输入流
-			byte[] buf1 = new byte[1024];
-			int length = is.read(buf1); // 读入字节数组
-			String request = new String(buf1, 0, length, "utf-8");
-			System.out.println("client:" + request);
+		
+		// 1－新建接受数据报socket对象，绑定6666端口
+		DatagramSocket socket = new DatagramSocket(6666);
+		actionPerformedJudge action=new actionPerformedJudge();
+		Windowbuilder win=new Windowbuilder();
+		win.frame.setTitle("Server");
+		win.frame.setVisible(true);
+		
+		// 2－新建用来接受数据的数据报包对象
+		while (action.actionPerformedJudge) { 
 			
-			OutputStream os = socket.getOutputStream(); // 2-获得输出流	
-			Scanner sc=new Scanner(System.in);
-			String out=sc.nextLine();
-			byte[] buf2=out.getBytes("utf-8");
-			os.write(buf2);
-					
+			byte[] buf = new byte[1024];
+			String message="Linking";
+			DatagramPacket recPacket = new DatagramPacket(buf, buf.length);
+//3－接受客户端数据报
+			socket.receive(recPacket);
+			
+			System.out.println("client:" + message); // 打印控制台
+			
+			win.lblNewLabel.setText("client:"+message);//显示界面
+//4－获得数据报中的客户地址和端口
+			InetAddress clientAddress = recPacket.getAddress();
+			int clientPort = recPacket.getPort();
 
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			buf = message.getBytes();
+//5－设置发送数据报的内容、地址和端口
+			DatagramPacket sendPacket = new DatagramPacket(buf, buf.length, clientAddress, clientPort);
+//6－发送数据报(直接将接受的内容返回)
+			socket.send(sendPacket);
 		}
 	}
+
 }
