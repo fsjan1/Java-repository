@@ -1,0 +1,91 @@
+package question;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.SwingConstants;
+import javax.swing.JTextField;
+import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JTextPane;
+import javax.swing.JLabel;
+
+class actionPerformedJudge{
+		boolean actionPerformedJudge=false;
+	}
+
+public class Windowbuilder {
+	
+	
+	
+	JFrame frame;
+	JTextField textField;
+	JLabel lblNewLabel = new JLabel("");
+	
+	/**
+	 * Launch the application.
+	 * @throws SocketException 
+	 */
+	public static void main(String[] args) throws SocketException {
+		
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Windowbuilder window = new Windowbuilder();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public Windowbuilder() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	public void initialize() {
+		frame = new JFrame();
+		frame.getContentPane().setForeground(Color.BLACK);
+		frame.setBounds(100, 100, 588, 400);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+
+		
+		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		lblNewLabel.setBounds(30, 25, 512, 139);
+		frame.getContentPane().add(lblNewLabel);
+
+		textField = new JTextField();
+		textField.setHorizontalAlignment(SwingConstants.LEFT);
+		textField.setBounds(30, 199, 512, 106);
+		frame.getContentPane().add(textField);
+		textField.setColumns(10);
+
+		JButton btnNewButton = new JButton("Send");
+		
+
+		
+		btnNewButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				String Text = textField.getText();
+				lblNewLabel.setText(Text);
+				
+			}
+		});
+
+		btnNewButton.setBounds(240, 313, 93, 23);
+		frame.getContentPane().add(btnNewButton);
+
+	}
+}
