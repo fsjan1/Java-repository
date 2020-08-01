@@ -1,36 +1,42 @@
 package question;
 
-import java.io.*;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.net.*;
 import java.util.Scanner;
 
+import question.Windowbuilder.actionPerformedJudge;
+
 public class Client {
+	
 	public static void main(String[] args) throws Exception {
-		// 1 新建与服务器的连接
+		// 1－新建发送数据报socket对象
+		
+		Windowbuilder win=new Windowbuilder();
+		actionPerformedJudge action=new actionPerformedJudge();
+		win.frame.setTitle("Client");
+		win.frame.setVisible(true);
+		
+		DatagramSocket socket = new DatagramSocket();
+//2－将发送消息转换为字节数组
+		while (action.actionPerformedJudge) {
+			
+			String message="Linking";
+			byte[] messgeBytes = message.getBytes();
+			InetAddress serverAddress = InetAddress.getByName("localhost");
+//3－新建发送数据报包，设置内容、地址和端口
+			DatagramPacket sendPacket = new DatagramPacket(messgeBytes, messgeBytes.length, serverAddress, 6666);
+			socket.send(sendPacket); // 发送数据报
+//4－定义接受缓冲字节数组
+			byte[] buf = new byte[1024];
 
-		Socket socket = new Socket("192.168.2.100", 9001);
+//5－新建接受数据包
+			DatagramPacket recPacket = new DatagramPacket(buf, buf.length);
 
-		while (true) {
-			Scanner sc=new Scanner(System.in);
-			String input=sc.nextLine();
-			// 2 获得网络输出流
-			OutputStream os = socket.getOutputStream();
-
-			// 3 通过文件输入流将文件内容写入网络输出流
-			byte[] buf1 = input.getBytes("utf-8");
-			os.write(buf1);
-			InputStream echoIs = socket.getInputStream();
-			byte[] buf2 = new byte[1024];
-			int length = echoIs.read(buf2);
-
-			// 5-使用字节数组作为方法参数，构造字符串
-			String echoMessage = new String(buf2, 0, length, "utf-8");
-			System.out.println("server:" + echoMessage);
-			// System.out.println(socket.getInetAddress());
-			// System.out.println(InetAddress.getLocalHost());
-
+//6－接受数据报
+			socket.receive(recPacket);
+//控制台输出
+			System.out.println("server:" + new String(buf));
+			
+			win.lblNewLabel.setText("server:"+message);//显示界面
 		}
 	}
-
 }
