@@ -13,50 +13,56 @@ class ServerWindow extends Windowbuilder {
 }
 
 public class Server {
+	
 
 	public static void main(String[] args) throws Exception {
-		
+
 		ServerWindow win = new ServerWindow();// new一个win对象
 
 		win.frame.setVisible(true);// 可视化
 		win.frame.setTitle("Server");
-
+		recordInfo Info=new recordInfo();
 		DatagramSocket socket = new DatagramSocket(6666);// 接口6666
 
-		byte[] Recbuf = new byte[1024]; // 创建字节数组(缓冲区)
+		while (true) {
 
-		DatagramPacket recPacket = new DatagramPacket(Recbuf, Recbuf.length);
-		// 2.2－接受客户端数据报
-		socket.receive(recPacket);
-		
-		String message = new String(Recbuf, "utf-8"); // 字节流-》字符流
-		
-		win.lblNewLabel.setText(message);
-		
-		InetAddress clientAddress = recPacket.getAddress();
-		
-		int clientPort = recPacket.getPort();
-		// 2.4－设置发送数据报的内容、地址和端口
+			byte[] Recbuf = new byte[1024]; // 创建字节数组(缓冲区)
 
-		
+			DatagramPacket recPacket = new DatagramPacket(Recbuf, Recbuf.length);
+			// 2.2－接受客户端数据报
+			socket.receive(recPacket);
 
-		win.btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String Text = win.textField.getText();
+			String message = new String(Recbuf, "utf-8"); // 字节流-》字符流
+			Info.setRecord(Info.getRecord()+"\n"+message);
+			win.textArea_1.setText(Info.getRecord());
 
-				byte[] Sendbuf = Text.getBytes();// 发包缓冲区
-				
-				DatagramPacket sendPacket = new DatagramPacket(Sendbuf, Sendbuf.length, clientAddress, clientPort);
-				// 2.5－发送数据报(直接将接受的内容返回)
-				try {
-					socket.send(sendPacket);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+			InetAddress clientAddress = recPacket.getAddress();
+
+			int clientPort = recPacket.getPort();
+			// 2.4－设置发送数据报的内容、地址和端口
+
+			win.btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					String Text = win.textArea.getText();
+
+					Info.setRecord(Info.getRecord()+"\n"+Text);
+					
+					win.textArea_1.setText(Info.getRecord());
+
+					byte[] Sendbuf = Text.getBytes();// 发包缓冲区
+
+					DatagramPacket sendPacket = new DatagramPacket(Sendbuf, Sendbuf.length, clientAddress, clientPort);
+					// 2.5－发送数据报(直接将接受的内容返回)
+					try {
+						socket.send(sendPacket);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
 				}
-			}
-		});
+			});
 
+		}
 	}
-
 }
