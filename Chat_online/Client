@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.*;
 
-
 class ClientWindow extends Windowbuilder {
 	public ClientWindow() throws SocketException {
 		super();
@@ -14,45 +13,55 @@ class ClientWindow extends Windowbuilder {
 }
 
 public class Client {
-
+	
 	public static void main(String[] args) throws Exception {
-
+		recordInfo Info=new recordInfo();
 		ClientWindow win = new ClientWindow();
 
 		win.frame.setVisible(true);
 		win.frame.setTitle("Client");
 		// 1－新建发送数据报socket对象
-		DatagramSocket socket = new DatagramSocket();
-		// 2－将发送消息
-		InetAddress serverAddress = InetAddress.getByName("localhost");
 
-		win.btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String Text = win.textField.getText();
+		while (true) {
+			DatagramSocket socket = new DatagramSocket();
+			// 2－将发送消息
+			InetAddress serverAddress = InetAddress.getByName("localhost");
 
-				byte[] Sendbuf = Text.getBytes();// 发包缓冲区
-				
-				DatagramPacket sendPacket = new DatagramPacket(Sendbuf, Sendbuf.length, serverAddress, 6666);
-				// 2.5－发送数据报(直接将接受的内容返回)
-				try {
-					socket.send(sendPacket);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+			win.btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					String Text = win.textArea.getText();
+					
+					
+					Info.setRecord(Info.getRecord()+"\n"+Text);
+					
+					win.textArea_1.setText(Info.getRecord());
+					
+					byte[] Sendbuf = Text.getBytes();// 发包缓冲区
+
+					DatagramPacket sendPacket = new DatagramPacket(Sendbuf, Sendbuf.length, serverAddress, 6666);
+					// 2.5－发送数据报(直接将接受的内容返回)
+					try {
+						socket.send(sendPacket);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
 				}
-			}
-		});
+			});
 
-		// 4－定义接受缓冲字节数组,新建接受数据包
-		byte[] buf = new byte[1024];
-		DatagramPacket recPacket = new DatagramPacket(buf, buf.length);
+			// 4－定义接受缓冲字节数组,新建接受数据包
+			byte[] buf = new byte[1024];
+			DatagramPacket recPacket = new DatagramPacket(buf, buf.length);
 
-		// 5－接受数据报
-		socket.receive(recPacket);
-		
-		String message = new String(buf, "utf-8");
-		
-		win.lblNewLabel.setText(message);
+			// 5－接受数据报
+			socket.receive(recPacket);
 
+			String message = new String(buf, "utf-8");
+			
+			Info.setRecord(Info.getRecord()+"\n"+message);
+			
+			win.textArea_1.setText(Info.getRecord());
+		}
 	}
 }
