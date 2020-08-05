@@ -1,0 +1,32 @@
+package question;
+
+import java.io.Serializable;
+import java.util.Date;
+
+public class recordInfo implements Serializable{
+	private userInfo user;
+	private String record="";
+	private Date recordDate;
+	
+	public static void main(String[] args) {
+		
+	}
+	public userInfo getUser() {
+		return user;
+	}
+	public void setUser(userInfo user) {
+		this.user = user;
+	}
+	public String getRecord() {
+		return record;
+	}
+	public void setRecord(String record) {
+		this.record = record;
+	}
+	public Date getRecordDate() {
+		return recordDate;
+	}
+	public void setRecordDate(Date recordDate) {
+		this.recordDate = recordDate;
+	}
+}
