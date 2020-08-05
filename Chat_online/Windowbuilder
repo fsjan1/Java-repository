@@ -16,6 +16,7 @@ import java.net.*;
 import javax.swing.JTextArea;
 import javax.swing.JList;
 import javax.swing.JComboBox;
+import javax.swing.JScrollPane;
 
 public class Windowbuilder {
 
@@ -23,6 +24,8 @@ public class Windowbuilder {
 	JButton btnNewButton = new JButton("Send");
 	JTextArea textArea = new JTextArea();
 	JTextArea textArea_1 = new JTextArea();
+	private final JScrollPane scrollPane = new JScrollPane();
+	private final JScrollPane scrollPane_1 = new JScrollPane();
 	/**
 	 * Launch the application.
 	 * 
@@ -66,13 +69,14 @@ public class Windowbuilder {
 
 		btnNewButton.setBounds(240, 313, 93, 23);
 		frame.getContentPane().add(btnNewButton);
+		scrollPane_1.setBounds(30, 234, 512, 71);
 		
+		frame.getContentPane().add(scrollPane_1);
+		scrollPane_1.setViewportView(textArea);
+		scrollPane.setBounds(30, 20, 512, 188);
 		
-		textArea.setBounds(30, 234, 512, 71);
-		frame.getContentPane().add(textArea);
-		
-		textArea_1.setBounds(30, 20, 512, 188);
-		frame.getContentPane().add(textArea_1);
+		frame.getContentPane().add(scrollPane);
+		scrollPane.setViewportView(textArea_1);
 		
 		JLabel lblNewLabel = new JLabel("输入区");
 		lblNewLabel.setBounds(29, 218, 54, 15);
