@@ -1,0 +1,38 @@
+package question;
+
+import java.io.Serializable;
+
+public class userInfo implements Serializable {
+	private String userName;
+	private String userAddress;
+	private String userPort;
+
+	public static void main(String[] args) {
+
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getUserAddress() {
+		return userAddress;
+	}
+
+	public void setUserAddress(String userAddress) {
+		this.userAddress = userAddress;
+	}
+
+	public String getUserPort() {
+		return userPort;
+	}
+
+	public void setUserPort(String userPort) {
+		this.userPort = userPort;
+	}
+
+}
