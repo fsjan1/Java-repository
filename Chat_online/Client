@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.*;
+import java.util.Arrays;
 
 class ClientWindow extends Windowbuilder {
 	public ClientWindow() throws SocketException {
@@ -23,7 +24,7 @@ public class Client {
 		// 1－新建发送数据报socket对象
 
 		while (true) {
-			DatagramSocket socket = new DatagramSocket();
+			
 			// 2－将发送消息
 			InetAddress serverAddress = InetAddress.getByName("localhost");
 
@@ -40,8 +41,13 @@ public class Client {
 
 					DatagramPacket sendPacket = new DatagramPacket(Sendbuf, Sendbuf.length, serverAddress, 6666);
 					// 2.5－发送数据报(直接将接受的内容返回)
+					
+					
+					
 					try {
-						socket.send(sendPacket);
+						DatagramSocket socket1 = new DatagramSocket();
+						socket1.send(sendPacket);
+						socket1.close();
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -49,19 +55,28 @@ public class Client {
 					
 				}
 			});
-
+			DatagramSocket socket = new DatagramSocket(6667);
 			// 4－定义接受缓冲字节数组,新建接受数据包
-			byte[] buf = new byte[1024];
-			DatagramPacket recPacket = new DatagramPacket(buf, buf.length);
+			byte[] Recbuf = new byte[1024];
+			
+			DatagramPacket recPacket = new DatagramPacket(Recbuf, Recbuf.length);
 
 			// 5－接受数据报
 			socket.receive(recPacket);
-
-			String message = new String(buf, "utf-8");
+			
+			
+			String message = new String(Recbuf, "utf-8");
+			
+			
 			
 			Info.setRecord(Info.getRecord()+"\n"+message);
 			
 			win.textArea_1.setText(Info.getRecord());
+			
+
+			
+			socket.close();
+			
 		}
 	}
 }
